@@ -254,4 +254,39 @@ class Solution:
         return maxWater
 ```
 
+## 15. 3Sum (Medium)
+双指针
+[-4 (i = 0), -1(left = i + 1), -1, 0, 1, 2 (right = len(nums) - 1) ]
+i用来从左到右扫描整个数组，left和right为双指针。三个指针构成3sum
 
+```python
+class Solution:
+    def threeSum(self, nums: List[int]) -> List[List[int]]:
+        res = []
+        nums.sort() # 为了后面确定指针移动方向
+        for i in range(len(nums) - 2):
+            if i != 0 and nums[i] == nums[i-1]: # 去重：i为同一个num
+                continue
+            left = i + 1
+            right = len(nums) - 1
+            while left < right:
+                summ = nums[i] + nums[left] + nums[right]
+                if summ == 0:
+                    res.append([nums[i], nums[left], nums[right]])
+                    
+                    # 去重，下一次指针移动又遇见了相同的num
+                    while left < right and nums[left+1] == nums[left]:
+                        left += 1
+                    while left < right and nums[right-1] == nums[right]:
+                        right -= 1
+                    left += 1
+                    right -= 1
+                # 指针移动方向
+                elif summ < 0:  # 因为sorted，如果sum<0：需要更大的数
+                                # 因为left向右移动（变大），right向左移动（变小），left应该移动
+                    left += 1
+                elif summ > 0:
+                    right -= 1
+        return res
+                
+```
